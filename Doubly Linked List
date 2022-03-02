@@ -1,0 +1,339 @@
+import sys
+
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.prev = None
+
+
+class DoublyLinkedList:
+    def __init__(self):
+        self.head = None
+
+    def is_empty(self):
+        return self.head is None
+
+    def delete_only_one_node_in_LL(self):
+        flag = 0
+        print "Only one node in the Linked List"
+        print "Do you want to delete it?"
+        confirmation = input("Press '0' to Abort or '1' to Delete: ")
+
+        if confirmation:
+            self.head = None
+            flag = 1
+        return flag
+
+    def doubly_LL_length(self):
+        doubly_ll_length = 0
+        temp_head = self.head
+
+        while temp_head:
+            doubly_ll_length += 1
+            temp_head = temp_head.next
+
+        return doubly_ll_length
+
+    def display_nodes(self, reverse=False):
+        if self.is_empty():
+            print "Doubly Linked List is Empty!!!"
+            return
+        if not reverse:
+            temp = self.head
+            while temp:
+                print "{}<--->".format(temp.data),
+                temp = temp.next
+            return
+        else:
+            temp = self.head
+
+            # Let's move to the last node of the LL
+            while temp.next:
+                temp = temp.next
+
+            # After the loop ends, now the temp points to the last node in LL
+            # Now traverse in backward direct with the help of prev
+            while temp:
+                print "{}<--->".format(temp.data),
+                temp = temp.prev
+            return
+
+    def add_a_node_at_beginning(self, node_data):
+        new_node = Node(node_data)
+
+        if self.is_empty():
+            self.head = new_node
+            return
+
+        # Add node at the beginning of LL which has more than one node
+        new_node.next = self.head
+        self.head.prev = new_node
+        self.head = new_node
+        return
+
+    def add_a_node_at_the_end(self, node_data):
+        new_node = Node(node_data)
+
+        if self.is_empty():
+            self.head = new_node
+            return
+
+        # Firstly, traverse till the end of the LL.
+        temp = self.head
+
+        while temp.next:
+            temp = temp.next
+        # Now add the new node at the end of the LL.
+        temp.next = new_node
+        new_node.prev = temp
+        return
+
+    def add_a_node_before_the_node(self):
+        flag = 0
+        if self.is_empty():
+            print "Doubly linked list is empty!!!"
+            print "Enter few nodes and try again!!!"
+            return
+
+        print "Adding new node before the mentioned node"
+        print "*****************************************"
+        print "Doubly linked list before adding new node"
+        self.display_nodes()
+        print "\n"
+        new_node_data = input("Enter new node data: ")
+        key_node_value = input("Enter the key node value: ")
+        # If LL is not empty then we need to create a node and insert in LL
+        new_node = Node(new_node_data)
+
+        # If the mentioned node value is at first i.e., head node
+        if self.head.data == key_node_value:
+            flag = 1
+            new_node.next = self.head
+            self.head.prev = new_node
+            self.head = new_node
+        else:
+            # If the LL has more than one node, then we need to navigate nodes
+            # to find the mentioned node and add/insert the new node before that
+            temp = self.head
+
+            while temp.next:
+                if temp.next.data == key_node_value:
+                    flag = 1
+                    new_node.next = temp.next
+                    temp.next.prev = new_node
+                    new_node.prev = temp
+                    temp.next = new_node
+                    break
+                temp = temp.next
+
+        print "Doubly linked list after adding new node"
+        self.display_nodes()
+        return flag
+
+    def add_a_node_after_the_node(self):
+        if self.is_empty():
+            print "Doubly linked list is empty!!!"
+            return
+
+        print "Doubly Linked List before inserting new node"
+        self.display_nodes()
+        flag = 0
+        new_node_data = input("\nEnter new node data: ")
+        key_node_value = input("Enter key node value: ")
+        new_node = Node(new_node_data)
+
+        temp = self.head
+        while temp:
+            if temp.data == key_node_value:
+                flag = 1
+                new_node.next = temp.next
+                temp.next.prev = new_node
+                new_node.prev = temp
+                temp.next = new_node
+                break
+            temp = temp.next
+
+        print "\nDoubly Linked List after inserting new node"
+        self.display_nodes()
+        return flag
+
+    def delete_a_node_from_the_beginning(self):
+        if self.is_empty():
+            print "Doubly Linked List is Empty!!!"
+            return
+
+        print "Doubly LL before deleting the node!!!"
+        self.display_nodes()
+        print "\n"
+        print "*" * 30
+        # If the Doubly LL has only one node
+        if self.head.next is None:
+            result = self.delete_only_one_node_in_LL()
+
+            if result:
+                print "Doubly Linked List is Empty now!!!"
+                return
+            else:
+                print "Did not delete the node, still LL has one node!!!"
+                self.display_nodes()
+                return
+
+        # If the Doubly linked list has more than one nodes
+        prev_first_node = self.head
+        self.head = self.head.next
+        self.head.prev = None
+        prev_first_node.next = None
+        print "Doubly LL after deleting the node!!!"
+        self.display_nodes()
+        return
+
+    def delete_a_node_at_the_end(self):
+        if self.is_empty():
+            print "Doubly Linked List is Empty!!!"
+            return
+
+        print "Doubly Linked List before deleting the node at the end!!!"
+        self.display_nodes()
+        print "\n"
+        print "*" * 30
+
+        # If only one node in the Doubly LL
+        if self.head.next is None:
+            result = self.delete_only_one_node_in_LL()
+
+            if result:
+                print "Doubly Linked List is Empty now!!!"
+                return
+            else:
+                print "Did not delete the node, still LL has one node!!!"
+                self.display_nodes()
+                return
+
+        # If Doubly LL has more than one node
+        temp_head = self.head
+        while temp_head:
+            if temp_head.next is None:
+                temp_head.prev.next = None
+                temp_head.prev = None
+                break
+            temp_head = temp_head.next
+
+        print "Doubly Linked List after deleting a node at the end!!!"
+        self.display_nodes()
+        return
+
+    def delete_a_node_by_its_value(self):
+        if self.is_empty():
+            print "Doubly Linked List is Empty!!!"
+            return
+
+        print "Doubly Linked List before deleting the node at the end!!!"
+        self.display_nodes()
+        print "\n"
+        print "*" * 30
+
+        flag = 0
+        # If the key node value is at head
+        key_node_value = input("Enter the value of the node to delete: ")
+        if self.head.data == key_node_value:
+            flag = 1
+            deleted_node = self.head
+            self.head = self.head.next
+            deleted_node.next = None
+        else:
+            # We know that head node is not the key node, so start count from 2
+            # If the count value and doubly LL length are same then the key node
+            # value is in the last node
+            temp_head = self.head
+            count = 2
+            while temp_head.next:
+                if temp_head.next.data == key_node_value:
+                    break
+                count += 1
+                temp_head = temp_head.next
+
+            if count == self.doubly_LL_length():
+                flag = 1
+                deleted_node = temp_head
+                temp_head.next = None
+                deleted_node.prev = None
+            else:
+                # If the entered value is not in head/last node, then navigate the LL
+                # Once the node value matches, then perform delete operation
+                temp_head = self.head
+
+                while temp_head.next:
+                    if temp_head.next.data == key_node_value:
+                        flag = 1
+                        deleted_node = temp_head.next
+                        temp_head.next = temp_head.next.next
+                        temp_head.next.prev = temp_head
+                        deleted_node.next, deleted_node.prev = None, None
+                        break
+                    temp_head = temp_head.next
+
+        return flag
+
+
+def main():
+    doubly_ll = DoublyLinkedList()
+    while True:
+        print "\n"
+        print "\t\t Doubly Linked List \t\t"
+        print "\t\t ****** ****** **** \t\t"
+        print "1. Display nodes"
+        print "2. Display nodes in reverse"
+        print "3. Add a node from the beginning"
+        print "4. Add a node at the end"
+        print "5. Add a node before the node"
+        print "6. Add a node after the node"
+        print "7. Delete a node from the beginning"
+        print "8. Delete a node at the end"
+        print "9. Delete a node by its value"
+        print "10. Exit"
+
+        option = input("Enter your option: ")
+
+        if option == 1:
+            doubly_ll.display_nodes()
+            print "\nLength of Doubly LL is {}".\
+                format(doubly_ll.doubly_LL_length())
+        elif option == 2:
+            doubly_ll.display_nodes(reverse=True)
+        elif option == 3:
+            doubly_ll.add_a_node_at_beginning(input("Enter node data: "))
+        elif option == 4:
+            doubly_ll.add_a_node_at_the_end(input("Enter node data: "))
+        elif option == 5:
+            result = doubly_ll.add_a_node_before_the_node()
+            if result:
+                print "\nNew node added/inserted successfully"
+            else:
+                print "\nEntered key node value is not in the LL"
+        elif option == 6:
+            result = doubly_ll.add_a_node_after_the_node()
+            if result:
+                print "\nNew node added/inserted successfully"
+            else:
+                print "\nEntered key node value is not in the LL"
+        elif option == 7:
+            doubly_ll.delete_a_node_from_the_beginning()
+        elif option == 8:
+            doubly_ll.delete_a_node_at_the_end()
+        elif option == 9:
+            result = doubly_ll.delete_a_node_by_its_value()
+            if result:
+                print "Expected node deleted successfully!!!"
+                print "\nDoubly LL after deleting the node by its value!!!"
+                doubly_ll.display_nodes()
+            else:
+                print "\nEntered key node value is not in the Doubly LL"
+        elif option == 10:
+            print "Exiting Doubly linked list operations!!!"
+            sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
